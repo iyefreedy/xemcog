@@ -7,7 +7,7 @@ function ExperimentPage() {
 	const navigate = useNavigate();
 	const [currentStimulus, setCurrentStimulus] = useState(0);
 	const canvasRef = useRef<CanvasDraw | null>(null);
-	const stimuli = ["Tobrut", "Anjing", "Apel", "Kucing"];
+	const stimuli = ["Anjing", "Apel", "Kucing"];
 
 	const handleSubmit: React.FormEventHandler = (e) => {
 		e.preventDefault();
@@ -29,10 +29,10 @@ function ExperimentPage() {
 
 	return (
 		<div className="container mx-auto p-4">
-			<header className="text-center my-8">
+			<header className="text-center my-6">
 				<h1 className="text-4xl font-bold">Experiment</h1>
 			</header>
-			<div className="text-left mt-8">
+			<div className="text-left mt-6">
 				<p className="mb-4">
 					Please read the following stimulus and provide your response by
 					drawing:
@@ -43,7 +43,7 @@ function ExperimentPage() {
 
 					<CanvasDraw
 						ref={canvasRef}
-						canvasWidth={400}
+						canvasWidth={750}
 						canvasHeight={400}
 						brushRadius={2}
 						lazyRadius={0}
