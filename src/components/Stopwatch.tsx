@@ -42,6 +42,7 @@ const Stopwatch = () => {
 			</p>
 			<div className="flex justify-center">
 				<button
+					type="button"
 					className="m-4 border-none py-2 px-6 cursor-pointer text-white bg-green-600"
 					onClick={startAndStop}
 				>
