@@ -33,10 +33,6 @@ const Stopwatch = () => {
 		setIsRunning(!isRunning);
 	};
 
-	// Method to reset timer back to 0
-	const reset = () => {
-		setTime(0);
-	};
 	return (
 		<div className="stopwatch-container">
 			<p className="text-center text-lg">
@@ -50,12 +46,6 @@ const Stopwatch = () => {
 					onClick={startAndStop}
 				>
 					{isRunning ? "Stop" : "Start"}
-				</button>
-				<button
-					className="m-4 border-none py-2 px-6 cursor-pointer text-white bg-red-600"
-					onClick={reset}
-				>
-					Reset
 				</button>
 			</div>
 		</div>
