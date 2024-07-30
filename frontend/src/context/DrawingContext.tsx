@@ -88,6 +88,7 @@ export const DrawingProvider = ({
         if (isDrawing) {
             start()
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isDrawing])
 
     const handleSubmit = async () => {
@@ -108,9 +109,6 @@ export const DrawingProvider = ({
     }
 
     const saveResponse = async () => {
-        const currentSession = JSON.parse(
-            localStorage.getItem('currentSession') ?? ''
-        )
         const blob = dataURItoBlob(stageRef.current?.toDataURL() ?? '')
         console.log(time, date)
 
@@ -121,7 +119,7 @@ export const DrawingProvider = ({
             Math.random() + '.jpg'
         )
         formData.append('response_time', time.toString())
-        formData.append('session_id', currentSession.id)
+        formData.append('session_id', `${session?.id.toString()}`)
         formData.append('word', words[currentWordIndex])
 
         await API.saveResponse(formData)
