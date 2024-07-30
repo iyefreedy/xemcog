@@ -12,7 +12,7 @@ export default function LoginPage() {
         email: '',
         password: '',
     })
-    const { isAuthenticated, handleLogin } = useAuth()
+    const { isAuthenticated, handleLogin, error, loading } = useAuth()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -23,7 +23,7 @@ export default function LoginPage() {
 
     const attemptLogin: React.FormEventHandler = (event) => {
         event.preventDefault()
-        handleLogin()
+        handleLogin(credential)
     }
 
     return (
@@ -32,6 +32,12 @@ export default function LoginPage() {
                 <h1 className="mb-4 text-center text-2xl font-bold">
                     Login Here
                 </h1>
+
+                {error && (
+                    <div className="mb-3 rounded-md border border-red-500 bg-red-300 p-2 text-center text-sm">
+                        {error}
+                    </div>
+                )}
 
                 <form onSubmit={attemptLogin}>
                     <div className="mb-3">
@@ -75,6 +81,7 @@ export default function LoginPage() {
                     <button
                         type="submit"
                         className="w-full rounded bg-emerald-500 p-2 text-white transition-shadow focus:ring-[3px] focus:ring-emerald-600"
+                        disabled={loading}
                     >
                         Sign in
                     </button>

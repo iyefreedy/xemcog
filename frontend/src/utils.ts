@@ -1,20 +1,13 @@
 import axios from 'axios'
 
 export const axiosInstance = axios.create({
-    baseURL: 'http://localhost:5000/api',
+    baseURL: import.meta.env.VITE_API_URL,
     withCredentials: true,
 })
 
 axiosInstance.interceptors.request.use(function (config) {
     config.headers['X-CSRF-TOKEN'] = getCookie('csrf_access_token')
     console.log(getCookie('csrf_access_token'))
-
-    return config
-})
-
-axiosInstance.interceptors.response.use(function (config) {
-    // config.headers['X-CSRF-TOKEN'] = getCookie('csrf_access_token')
-    // window.location.href = 'http://localhost:5173/login'
 
     return config
 })
