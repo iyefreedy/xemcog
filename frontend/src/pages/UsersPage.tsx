@@ -1,8 +1,10 @@
 import { CreateUserDialog } from '@/components/CreateUserDialog'
+import { useFetchUsers } from '@/hooks/useFetchUser'
 import AppLayout from '@/layouts/AppLayout'
 import { useState } from 'react'
 
 export default function UsersPage() {
+    const { users, attemptCreateUser } = useFetchUsers()
     const [isCreateUserDialogOpen, setIsCreateUserDialogOpen] = useState(false)
 
     return (
@@ -21,7 +23,7 @@ export default function UsersPage() {
                 </div>
 
                 <div>
-                    <table className="table-auto text-sm">
+                    <table className="w-full table-auto text-sm">
                         <thead>
                             <tr className="text-gray-500">
                                 <th className="border-b border-b-gray-400 px-3 py-1.5">
@@ -33,12 +35,22 @@ export default function UsersPage() {
                                 <th className="border-b border-b-gray-400 px-3 py-1.5"></th>
                             </tr>
                         </thead>
+                        <tbody>
+                            {users.map((user) => (
+                                <tr key={user.id} className="text-xs">
+                                    <td>{user.fullname}</td>
+                                    <td>{user.email}</td>
+                                    <td></td>
+                                </tr>
+                            ))}
+                        </tbody>
                     </table>
                 </div>
             </div>
 
             <CreateUserDialog
                 isOpen={isCreateUserDialogOpen}
+                onSave={attemptCreateUser}
                 closeDialog={() => setIsCreateUserDialogOpen(false)}
             />
         </AppLayout>

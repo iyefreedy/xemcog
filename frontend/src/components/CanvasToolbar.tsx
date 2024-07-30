@@ -29,8 +29,11 @@ export const CanvasToolbar = () => {
 
     return (
         <>
+            <p className="mb-4 text-center font-medium text-indigo-600 md:text-xl">
+                {words[currentWordIndex]}
+            </p>
             <div className="mb-4 flex items-center justify-between">
-                <div className="flex w-1/3 space-x-2 md:space-x-4">
+                <div className="flex space-x-2 md:space-x-4">
                     <div className="h-auto w-7 overflow-hidden rounded-full md:w-9">
                         <input
                             type="color"
@@ -71,11 +74,7 @@ export const CanvasToolbar = () => {
                     </button>
                 </div>
 
-                <p className="w-1/3 text-center text-xl font-bold">
-                    {words[currentWordIndex]}
-                </p>
-
-                <div className="flex w-1/3 items-center justify-end space-x-2 md:space-x-4">
+                <div className="flex items-center justify-end space-x-2 md:space-x-4">
                     <p className="text-center text-xs md:text-base">
                         {hours}:{minutes.toString().padStart(2, '0')}:
                         {seconds.toString().padStart(2, '0')}:

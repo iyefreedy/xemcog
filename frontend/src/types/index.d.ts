@@ -1,19 +1,22 @@
-import React from "react";
+import { LayoutContextProps, LayoutMenuMode, LayoutState } from '@/types/layout'
 
-export type User = {
+export interface User {
+    id: number
     fullname: string
+    email: string
     is_admin: boolean
 }
 
-export type LayoutContextProps = {
-    layoutState: LayoutState;
-    setLayoutState: React.Dispatch<React.SetStateAction<LayoutState>>
-    onMenuToggle: () => void
+export interface Session {
+    id: number
+    session_number: number
+    user_id: number
 }
 
-export type LayoutState = {
-    staticMenuMobileActive: boolean;
-    staticMenuDesktopInactive: boolean;
+export type CreateUserInfo = Omit<User, 'is_admin' | 'id'> & {
+    password: string
 }
 
-type LayoutMenuMode = 'static' | 'overlay'
+export type CredentialInfo = Pick<User, 'email'> & { password: string }
+
+export { LayoutContextProps, LayoutMenuMode, LayoutState }

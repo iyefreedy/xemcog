@@ -1,5 +1,5 @@
-import { AuthContext } from '@/context/AuthContext'
-import React, { useContext, useEffect, useState } from 'react'
+import { useAuth } from '@/hooks/useAuth'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 type Credential = {
@@ -12,18 +12,14 @@ export default function LoginPage() {
         email: '',
         password: '',
     })
-    const { user, handleLogin } = useContext(AuthContext)
+    const { isAuthenticated, handleLogin } = useAuth()
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (user) {
+        if (isAuthenticated) {
             navigate('/')
         }
-
-        if (user && user.is_admin) {
-            navigate('/dashboard')
-        }
-    }, [user])
+    }, [isAuthenticated])
 
     const attemptLogin: React.FormEventHandler = (event) => {
         event.preventDefault()

@@ -5,9 +5,10 @@ class Response(db.Model):
     __tablename__ = 'responses'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
-    stimulus_id = db.Column(db.Integer, nullable=False)
-    response = db.Column(db.Integer, nullable=False)
+    session_id = db.Column(db.Integer, nullable=False)
+    interpretation_image_path = db.Column(db.String(255), nullable=False)
+    response_time = db.Column(db.Integer, nullable=False)
+    word = db.Column(db.String(50), nullable=False)
     created_at = db.Column(db.DateTime(), nullable=False,
                            default=db.func.now())
     updated_at = db.Column(db.DateTime(), nullable=False,
@@ -16,9 +17,10 @@ class Response(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "user_id": self.user_id,
-            "stimulus_id": self.stimulus_id,
-            "response": self.response,
+            "user_id": self.session_id,
+            "word": self.word,
+            "response": self.response_time,
+            "interpretation_image_path": self.interpretation_image_path,
             "created_at": self.created_at,
             "updated_at": self.updated_at
         }

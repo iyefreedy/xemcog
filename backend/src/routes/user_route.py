@@ -15,6 +15,21 @@ user_blueprint = Blueprint('user', __name__, url_prefix='/users')
 def get_current_user():
     return current_user.serialize()
 
+@user_blueprint.get('/')
+@jwt_required()
+@admin_required()
+def get_users():
+    try:
+        users = User.query.all()
+        db.session.commit()
+        return jsonify([user.serialize() for user in users]), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify(message=str(e)), 500
+    finally:
+        db.session.close()
+
+
 
 @user_blueprint.post('/')
 @jwt_required(verify_type=False, skip_revocation_check=True)
@@ -30,7 +45,7 @@ def create_user():
         validator = CustomValidator(create_user_schema)
         if not validator.validate(data):
             error = next(iter(validator.errors))
-            return jsonify(error=validator.errors[error][0]), 400
+            return jsonify(message=validator.errors[error][0]), 400
 
         existing_user = User.query.filter_by(email=email).first()
         if existing_user is not None:

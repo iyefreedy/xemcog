@@ -6,12 +6,12 @@ function ExperimentPage() {
     return (
         <>
             <header className="pt-6 text-center">
-                <h1 className="mb-2.5 text-4xl font-bold">Experiment</h1>
-                <p>Draw lines with your mouse.</p>
+                <h1 className="mb-1.5 text-2xl font-semibold">Experiment</h1>
+                <p className="text-sm">Draw lines with your mouse.</p>
             </header>
 
             <DrawingProvider>
-                <div className="overflow-hidden px-4 pb-8">
+                <div className="overflow-hidden px-4 pb-8 pt-4">
                     <CanvasToolbar />
                     <DrawingSketch />
                 </div>

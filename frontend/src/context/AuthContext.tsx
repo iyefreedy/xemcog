@@ -1,9 +1,9 @@
-import { authenticate, login } from '@/services/auth'
 import { User } from '@/types'
 import { createContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import authService from '@/services/authService'
+import { useLocation, useNavigate } from 'react-router-dom'
 
-interface AuthContextProps {
+export interface AuthContextProps {
     isAuthenticated: boolean
     user: User | null
     handleLogin: () => void
@@ -19,36 +19,36 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [user, setUser] = useState<User | null>(null)
     const navigate = useNavigate()
+    const location = useLocation()
 
     useEffect(() => {
-        const authorize = async () => {
-            try {
-                const user = await authenticate()
-                setIsAuthenticated(true)
-                setUser(user.data as User)
-            } catch (error) {
-                setUser(null)
-                setIsAuthenticated(false)
-            }
-        }
-
-        authorize()
+        authenticate()
     }, [])
 
-    useEffect(() => {
-        if (!user) {
+    const authenticate = async () => {
+        try {
+            const currentUser = await authService.authenticate()
+            setIsAuthenticated(true)
+            setUser(currentUser as User)
+            navigate(location.pathname)
+        } catch (error) {
+            setUser(null)
+            setIsAuthenticated(false)
             navigate('/login')
         }
-    }, [user])
+    }
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         try {
-            login({
+            await authService.login({
                 email: 'iye.fredickson@gmail.com',
                 password: 'iye83616766',
             })
+            const user = await authService.authenticate()
+            setUser(user)
             setIsAuthenticated(true)
         } catch (error) {
+            setUser(null)
             setIsAuthenticated(false)
         }
     }

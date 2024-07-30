@@ -1,4 +1,4 @@
-import { createUser } from '@/services/user'
+import { CreateUserInfo } from '@/types'
 import {
     Description,
     Dialog,
@@ -6,22 +6,30 @@ import {
     DialogTitle,
     DialogBackdrop,
 } from '@headlessui/react'
-import { FormEvent, FormEventHandler, useState } from 'react'
+import { AxiosResponse } from 'axios'
+import { FormEventHandler, useState } from 'react'
 
 export const CreateUserDialog = ({
     isOpen,
     closeDialog,
+    onSave,
 }: {
     isOpen: boolean
     closeDialog: () => void
+    onSave: (data: CreateUserInfo) => Promise<AxiosResponse>
 }) => {
     const [fullname, setFullname] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    const attemptCreateUser: FormEventHandler = (event: FormEvent) => {
-        event.preventDefault()
-        createUser({ fullname, email, password })
+    const handleCreateUser: FormEventHandler = async (event) => {
+        try {
+            event.preventDefault()
+            await onSave({ fullname, email, password })
+            closeDialog()
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
@@ -33,7 +41,7 @@ export const CreateUserDialog = ({
                         Create user account
                     </DialogTitle>
                     <Description>Create new user account</Description>
-                    <form onSubmit={attemptCreateUser}>
+                    <form onSubmit={handleCreateUser}>
                         <div className="mb-3">
                             <label htmlFor="fullname" className="mb-1.5 block">
                                 Full Name

@@ -1,6 +1,12 @@
+import API from '@/API'
 import { useTimer } from '@/hooks/useTimer'
+import sessionService from '@/services/sessionService'
+import stimuliService from '@/services/stimuliService'
+import { Session } from '@/types'
+import { dataURItoBlob } from '@/utils'
 import Konva from 'konva'
 import React, { createContext, useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 type Tool = 'pen' | 'eraser'
 
@@ -41,40 +47,41 @@ export const DrawingContext = createContext({} as DrawingContextProps)
 export const DrawingProvider = ({
     children,
 }: React.PropsWithChildren<{ children: React.ReactNode }>) => {
-    const [currentSession, setCurrentSession] = useState(0)
+    const [session, setSession] = useState<Session | null>(null)
     const [currentWordIndex, setCurrentWordIndex] = useState(0)
     const [words, setWords] = useState<string[]>([])
 
     const [tool, setTool] = useState<Tool>('pen')
-    const [drawingState, setDrawingState] = useState<DrawingState[]>([])
     const [lines, setLines] = useState<DrawingLine[]>([])
     const [stroke, setStroke] = useState<number>(1)
     const [color, setColor] = useState<string>('#000000')
     const [isDrawing, setIsDrawing] = useState(false)
+
     const stageRef = useRef<Konva.Stage>(null)
 
-    const { time, start, reset } = useTimer()
+    const { time, start, reset: resetTimer, date } = useTimer()
+    const navigate = useNavigate()
 
     useEffect(() => {
-        if (currentSession < 1) {
-            setCurrentSession(1)
-        } else {
-            setCurrentSession((prev) => prev++)
+        const fetchWords = async () => {
+            const words = await stimuliService.getStimulis()
+            setWords(words)
         }
 
-        setWords([
-            'Makan',
-            'Minum',
-            'Jalan',
-            'Main',
-            'Bicara',
-            'Nonton',
-            'Memakan',
-            'Meminum',
-            'Berjalan',
-            'Bermain',
-            'Menonton',
-        ])
+        const createSession = async () => {
+            const newSession = await sessionService.createNewSession()
+            setSession(newSession)
+            localStorage.setItem('currentSession', JSON.stringify(newSession))
+        }
+
+        const currentSession = localStorage.getItem('currentSession')
+        if (!currentSession) {
+            createSession()
+        } else {
+            setSession(JSON.parse(currentSession) as Session)
+        }
+
+        fetchWords()
     }, [])
 
     useEffect(() => {
@@ -84,15 +91,40 @@ export const DrawingProvider = ({
     }, [isDrawing])
 
     const handleSubmit = async () => {
-        reset()
-
-        setDrawingState((prev) => [
-            ...prev,
-            { lines, image: stageRef.current?.toDataURL() ?? '' },
-        ])
+        saveResponse()
+        if (currentWordIndex == words.length - 1) {
+            navigate('/thank-you')
+        }
+        resetTimer()
 
         setCurrentWordIndex((prev) => prev + 1)
+        resetToolbar()
+    }
+
+    const resetToolbar = () => {
         setLines([])
+        setStroke(1)
+        setColor('#000000')
+    }
+
+    const saveResponse = async () => {
+        const currentSession = JSON.parse(
+            localStorage.getItem('currentSession') ?? ''
+        )
+        const blob = dataURItoBlob(stageRef.current?.toDataURL() ?? '')
+        console.log(time, date)
+
+        const formData = new FormData()
+        formData.append(
+            'interpretation_image_path',
+            blob,
+            Math.random() + '.jpg'
+        )
+        formData.append('response_time', time.toString())
+        formData.append('session_id', currentSession.id)
+        formData.append('word', words[currentWordIndex])
+
+        await API.saveResponse(formData)
     }
 
     return (
@@ -108,7 +140,7 @@ export const DrawingProvider = ({
                 words,
                 currentWordIndex,
                 start,
-                reset,
+                reset: resetTimer,
                 setTool,
                 setStroke,
                 setColor,

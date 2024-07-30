@@ -2,6 +2,9 @@ import os
 from src.extensions import private_key, public_key
 from sqlalchemy import URL
 
+UPLOAD_FOLDER = os.path.join(os.path.dirname(
+    os.path.realpath(__file__)), '../static/images/responses')
+
 
 DATABASE_URI = URL.create(
     drivername="mysql",
