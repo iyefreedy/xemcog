@@ -1,6 +1,9 @@
+from dotenv import load_dotenv
 from flask import Flask
 from werkzeug.exceptions import NotFound, Unauthorized
 from src.extensions import db, migrate, jwt, cors
+
+load_dotenv()
 
 app = Flask(__name__)
 app.config.from_object("src.config.Config")
