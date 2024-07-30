@@ -6,6 +6,7 @@ Create Date: 2024-07-30 14:46:49.425965
 
 """
 from alembic import op
+from sqlalchemy.sql import table, column
 import sqlalchemy as sa
 
 
@@ -23,6 +24,8 @@ def upgrade():
                     sa.Column('session_id', sa.Integer(), nullable=False),
                     sa.Column('word', sa.String(50), nullable=False),
                     sa.Column('interpretation_image_path',
+                              sa.String(100), nullable=False),
+                    sa.Column('response_time',
                               sa.Integer(), nullable=False),
                     sa.Column('created_at', sa.DateTime(),
                               nullable=False, default=sa.func.now(), server_default=sa.func.now()),
@@ -55,6 +58,13 @@ def upgrade():
                     sa.PrimaryKeyConstraint('id'),
                     sa.UniqueConstraint('email')
                     )
+
+    users_table = table('users', column('fullname', sa.String(length=80)), column('email', sa.String(length=120)), column('password_hash', sa.String(
+        length=255)), column('is_admin', sa.Boolean()), column('created_at', sa.DateTime()), column('updated_at', sa.DateTime()))
+    op.bulk_insert(users_table, [
+        {"fullname": "Muhammad Quraisy", "email": "quraisy@uai.ac.id", "password_hash": "$2y$10$Fzlsc83JFj0qHYJv5FsiZ.qZbDMrNcho4a6OH4TZ24FrMzrcwKkWy",
+            "is_admin": 1, "created_at": "2024-07-30 14:46:49.425965", "updated_at": "2024-07-30 14:46:49.425965"},
+    ])
     # ### end Alembic commands ###
 
 

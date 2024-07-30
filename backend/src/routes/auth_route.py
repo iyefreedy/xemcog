@@ -16,7 +16,7 @@ def attempt_login():
     validator = CustomValidator(login_schema)
     if not validator.validate(data):
         error = next(iter(validator.errors))
-        return jsonify(error=validator.errors[error][0]), 400
+        return jsonify(message=validator.errors[error][0]), 400
 
     user = User.query.filter_by(email=email).first()
 
