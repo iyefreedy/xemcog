@@ -7,6 +7,7 @@ import DashboardPage from '@/pages/DashboardPage'
 import UsersPage from '@/pages/UsersPage'
 import ExperimentPage from '@/pages/ExperimentPage'
 import ThankyouPage from './pages/ThankyouPage'
+import ResponsePage from './pages/ResponsePage'
 
 export default function App() {
     return (
@@ -23,6 +24,7 @@ export default function App() {
                     <Route path="/experiment" element={<ExperimentPage />} />
                     <Route path="/dashboard" element={<DashboardPage />} />
                     <Route path="/users" element={<UsersPage />} />
+                    <Route path="/responses" element={<ResponsePage />} />
                 </Routes>
             </AuthProvider>
         </BrowserRouter>

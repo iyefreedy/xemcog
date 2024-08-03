@@ -26,20 +26,24 @@ export default function UsersPage() {
                     <table className="w-full table-auto text-sm">
                         <thead>
                             <tr className="text-gray-500">
-                                <th className="border-b border-b-gray-400 px-3 py-1.5">
+                                <th className="border-b border-b-gray-400 px-3 py-1.5 text-start">
                                     Fullname
                                 </th>
-                                <th className="border-b border-b-gray-400 px-3 py-1.5">
+                                <th className="border-b border-b-gray-400 px-3 py-1.5 text-start">
                                     Email
                                 </th>
-                                <th className="border-b border-b-gray-400 px-3 py-1.5"></th>
+                                <th className="border-b border-b-gray-400 px-3 py-1.5 text-start"></th>
                             </tr>
                         </thead>
                         <tbody>
                             {users.map((user) => (
                                 <tr key={user.id} className="text-xs">
-                                    <td>{user.fullname}</td>
-                                    <td>{user.email}</td>
+                                    <td className="px-3 py-1.5">
+                                        {user.fullname}
+                                    </td>
+                                    <td className="px-3 py-1.5">
+                                        {user.email}
+                                    </td>
                                     <td></td>
                                 </tr>
                             ))}

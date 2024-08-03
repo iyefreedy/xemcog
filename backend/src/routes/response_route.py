@@ -3,6 +3,7 @@ import sys
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import current_user, jwt_required
 from src.models.response import Response
+from src.models.session import Session
 from werkzeug.utils import secure_filename
 from src.config import UPLOAD_FOLDER
 from src.extensions import db
@@ -10,6 +11,20 @@ from src.extensions import db
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 response_blueprint = Blueprint('response', __name__, url_prefix='/responses')
+
+
+@response_blueprint.get('/')
+@jwt_required()
+def get_responses():
+    try:
+        sessions = Session.query.all()
+        db.session.commit()
+        return jsonify([session.serialize() for session in sessions]), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify(message=str(e))
+    finally:
+        db.session.close()
 
 
 @response_blueprint.post('/')

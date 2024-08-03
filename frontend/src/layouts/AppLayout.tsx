@@ -21,6 +21,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
         } else {
             unbindOutsideClickListener()
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [layoutState.staticMenuMobileActive])
 
     const bindOutsideClickListener = () => {
@@ -107,6 +108,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
                     <li>
                         <Link to={'/users'} className="p-1.5 font-medium">
                             Users
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to={'/responses'} className="p-1.5 font-medium">
+                            Responses
                         </Link>
                     </li>
                 </ul>
