@@ -1,10 +1,32 @@
+import { yupResolver } from "@hookform/resolvers/yup";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { Credential } from "@/types";
+import * as yup from "yup";
+
 export default function LoginPage() {
+  const loginSchema = yup.object({
+    email: yup.string().email().required().default(""),
+    password: yup.string().required().default(""),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Credential>({
+    resolver: yupResolver(loginSchema),
+  });
+
+  const attemptLogin: SubmitHandler<Credential> = (data) => {
+    console.log(data);
+  };
+
   return (
     <div className="container pt-20">
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center px-6">
         <div className="shadow-lg rounded-lg bg-white w-full max-w-md p-6">
           <h1 className="text-xl font-semibold mb-5">Login</h1>
-          <div>
+          <form onSubmit={handleSubmit(attemptLogin)}>
             <div className="mb-3">
               <label htmlFor="email" className="mb-1.5 block">
                 Email
@@ -14,7 +36,11 @@ export default function LoginPage() {
                 id="email"
                 autoComplete="email"
                 className="w-full px-2.5 py-1.5 rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-shadow"
+                {...register("email")}
               />
+              {errors.email?.message && (
+                <p className="text-red-500">{errors.email.message}</p>
+              )}
             </div>
 
             <div className="mb-3">
@@ -26,7 +52,11 @@ export default function LoginPage() {
                 id="password"
                 autoComplete="current-password"
                 className="w-full px-2.5 py-1.5 rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-shadow"
+                {...register("password")}
               />
+              {errors.password?.message && (
+                <p className="text-red-500">{errors.password.message}</p>
+              )}
             </div>
 
             <button
@@ -35,7 +65,7 @@ export default function LoginPage() {
             >
               Sign In
             </button>
-          </div>
+          </form>
         </div>
       </div>
     </div>
