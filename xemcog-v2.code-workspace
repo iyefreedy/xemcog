@@ -3,6 +3,10 @@
     {
       "path": "./frontend",
       "name": "Frontend"
+    },
+    {
+      "path": "./backend",
+      "name": "Backend"
     }
   ]
 }

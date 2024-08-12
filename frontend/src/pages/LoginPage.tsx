@@ -2,8 +2,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Credential } from "@/types";
 import * as yup from "yup";
+import { Navigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
 
 export default function LoginPage() {
+  const { handleLogin, user } = useContext(AuthContext);
   const loginSchema = yup.object({
     email: yup.string().email().required().default(""),
     password: yup.string().required().default(""),
@@ -17,9 +21,11 @@ export default function LoginPage() {
     resolver: yupResolver(loginSchema),
   });
 
-  const attemptLogin: SubmitHandler<Credential> = (data) => {
-    console.log(data);
+  const attemptLogin: SubmitHandler<Credential> = async (data) => {
+    await handleLogin(data);
   };
+
+  if (user) return <Navigate to={"/"} replace />;
 
   return (
     <div className="container pt-20">

@@ -1,3 +1,9 @@
 @tailwind base;
+@layer base {
+    body {
+        @apply font-poppins bg-slate-200 text-gray-800;
+    }
+}
+
 @tailwind components;
 @tailwind utilities;
