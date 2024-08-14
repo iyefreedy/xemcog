@@ -1,9 +1,11 @@
 import os
 import sys
 from flask import Flask, send_from_directory
+from dotenv import load_dotenv
 from src.extensions import db, migrate, jwt, cors
 from src.routes import api_blueprint
 
+load_dotenv()
 
 app = Flask(__name__)
 app.config.from_object("src.config.Config")
