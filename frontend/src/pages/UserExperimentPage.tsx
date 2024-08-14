@@ -25,9 +25,9 @@ const InputStep = () => {
 		if (repetition === 0) {
 			if (user?.email === "user1@uai.ac.id") {
 				setInput("Batas");
-			} else if (user?.email === "user1@uai.ac.id") {
+			} else if (user?.email === "user2@uai.ac.id") {
 				setInput("Tumbuh");
-			} else if (user?.email === "user1@uai.ac.id") {
+			} else if (user?.email === "user3@uai.ac.id") {
 				setInput("Cepat");
 			} else {
 				setInput("");
