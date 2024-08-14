@@ -66,7 +66,7 @@ def start_experiment():
     try:
         new_experiment = Experiment(
             user_id=data.get('user_id'),
-            start_time=datetime.fromisoformat(data.get('start_time'))
+            start_time=datetime.fromisoformat(data.get('start_time').replace('Z', '+00:00'))
         )
         db.session.add(new_experiment)
         db.session.commit()
@@ -85,7 +85,7 @@ def end_experiment(experiment_id):
     try:
         experiment: Experiment = Experiment.query.filter_by(
             experiment_id=experiment_id).first()
-        experiment.end_time = datetime.fromisoformat(data.get('end_time'))
+        experiment.end_time = datetime.fromisoformat(data.get('end_time').replace('Z', '+00:00'))
         db.session.commit()
         return experiment.serialize(), 200
     except Exception as e:
@@ -102,7 +102,7 @@ def create_session():
         new_session = Session(
             experiment_id=data.get('experiment_id'),
             word=data.get('word'),
-            start_time=data.get('start_time')
+            start_time=datetime.fromisoformat(data.get('start_time').replace('Z', '+00:00'))
         )
         db.session.add(new_session)
         db.session.commit()
@@ -121,7 +121,7 @@ def end_session(session_id):
     try:
         session: Session = Session.query.filter_by(
             session_id=session_id).first()
-        session.end_time = datetime.fromisoformat(data.get('end_time'))
+        session.end_time = datetime.fromisoformat(data.get('end_time').replace('Z', '+00:00'))
         db.session.commit()
         return session.serialize(), 200
     except Exception as e:
