@@ -10,6 +10,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     _password_hash = db.Column("password_hash", db.String(255), nullable=False)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
+    stimuli_word = db.Column(db.String(30), nullable=True)
     created_at = db.Column(db.DateTime(), nullable=False,
                            default=db.func.now())
     updated_at = db.Column(db.DateTime(), nullable=False,
@@ -25,7 +26,8 @@ class User(db.Model):
             "user_id": self.user_id,
             "fullname": self.fullname,
             "email": self.email,
-            "is_admin": self.is_admin
+            "is_admin": self.is_admin,
+            "stimuli_word": self.stimuli_word
         }
 
     def __repr__(self):

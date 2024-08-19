@@ -5,43 +5,70 @@ import { ExperimentContext } from "@/context/ExperimentContext";
 import { AuthContext } from "@/context/AuthContext";
 
 export default function UserExperimentPage() {
-	const { step } = useContext(ExperimentContext);
+	const { step, loading } = useContext(ExperimentContext);
+
+	const { user } = useContext(AuthContext);
+	const [secondsLeft, setSecondsLeft] = useState(3); // Mulai dari 3 detik
+	const [isTimeout, setIsTimeout] = useState(false);
+
+	useEffect(() => {
+
+		const timer = setInterval(() => {
+			setSecondsLeft((prevSeconds) => prevSeconds - 1);
+		}, 1000); // Kurangi setiap detik
+
+		const redirectTimeout = setTimeout(() => {
+			setIsTimeout(true);
+		}, 3000); // Pengalihan setelah 3 detik
+
+		// Bersihkan interval dan timeout ketika komponen dibongkar
+		return () => {
+			clearInterval(timer);
+			clearTimeout(redirectTimeout);
+		};
+
+	}, []);
+
+	if (loading) {
+		return <div className="p-10 text-center">Loading...</div>
+	}
+
+	if (!isTimeout) {
+		console.log(isTimeout)
+		return (
+			<div className="container mt-6 text-center">
+				<p>Mengarahkan dalam {secondsLeft} detik...</p>
+				<p>Kata Semantik: {user?.stimuli_word}</p>
+			</div>
+		);
+	}
 
 	return (
 		<div>
 			{step === "input" && <InputStep />}
 			{step === "sketch" && <SketchStep />}
 			{step === "rate" && <RateStep />}
+
 		</div>
 	);
 }
 
 const InputStep = () => {
+	const { user } = useContext(AuthContext);
 	const { handleSubmitWord, input, setInput, session, repetition } =
 		useContext(ExperimentContext);
-	const { user } = useContext(AuthContext);
-
-	useEffect(() => {
-		if (repetition === 0) {
-			if (user?.email === "user1@uai.ac.id") {
-				setInput("Batas");
-			} else if (user?.email === "user2@uai.ac.id") {
-				setInput("Tumbuh");
-			} else if (user?.email === "user3@uai.ac.id") {
-				setInput("Cepat");
-			} else {
-				setInput("");
-			}
-		}
-	}, []);
 
 	return (
 		<div className="container pt-10">
 			<div className="text-center max-w-md mx-auto">
 				{repetition > 0 && session && (
-					<h1 className="text-3xl font-bold">
-						Kata Sebelumnya: {session.word}
-					</h1>
+					<>
+						<h1 className="text-2xl font-bold">
+							Kata/Kalimat Sebelumnya: {session.word}
+						</h1>
+						<h2 className="text-xl font-semibold">Kata Stimuli: {user?.stimuli_word}</h2>
+					</>
+
 				)}
 				<form onSubmit={handleSubmitWord}>
 					<div className="mb-3">
@@ -51,7 +78,6 @@ const InputStep = () => {
 							className="w-full px-2.5 mt-1.5 py-1.5 rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-shadow text-center"
 							value={input}
 							onChange={(e) => setInput(e.target.value)}
-							readOnly={input !== ""}
 						/>
 					</div>
 					<button
@@ -67,11 +93,8 @@ const InputStep = () => {
 };
 
 const SketchStep = () => {
-	const [secondsLeft, setSecondsLeft] = useState(3); // Mulai dari 3 detik
-	const [timerStarted, setTimerStarted] = useState(false); // Menandai apakah timer sudah dimulai
-	const [isTimeout, setIsTimeout] = useState(false);
 
-	const { session, lines, setLines, handleSubmitSketch, stageRef, loading } =
+	const { lines, setLines, handleSubmitSketch, stageRef, loading } =
 		useContext(ExperimentContext);
 
 	const isDrawing = useRef(false);
@@ -102,42 +125,8 @@ const SketchStep = () => {
 		isDrawing.current = false;
 	};
 
-	useEffect(() => {
-		if (!loading && session) {
-			// Mulai timer hanya jika data sudah di-fetch dan tidak ada error
-			setTimerStarted(true);
-		}
-	}, [loading, session]);
-
-	useEffect(() => {
-		if (timerStarted) {
-			const timer = setInterval(() => {
-				setSecondsLeft((prevSeconds) => prevSeconds - 1);
-			}, 1000); // Kurangi setiap detik
-
-			const redirectTimeout = setTimeout(() => {
-				setIsTimeout(true);
-			}, 3000); // Pengalihan setelah 3 detik
-
-			// Bersihkan interval dan timeout ketika komponen dibongkar
-			return () => {
-				clearInterval(timer);
-				clearTimeout(redirectTimeout);
-			};
-		}
-	}, [timerStarted]);
-
 	if (loading) {
 		return <p className="text-center">Loading...</p>;
-	}
-
-	if (!isTimeout) {
-		return (
-			<div className="container mt-6 text-center">
-				<p>Mengarahkan dalam {secondsLeft} detik...</p>
-				<p>Kata Semantik: {session?.word}</p>
-			</div>
-		);
 	}
 
 	return (
