@@ -7,10 +7,10 @@ import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 
 export default function LoginPage() {
-  const { handleLogin, user } = useContext(AuthContext);
+  const { handleLogin, user, error } = useContext(AuthContext);
   const loginSchema = yup.object({
     email: yup.string().email().required().default(""),
-    password: yup.string().required().default(""),
+    password: yup.string().required().min(8).default(""),
   });
 
   const {
@@ -32,7 +32,12 @@ export default function LoginPage() {
       <div className="flex items-center justify-center px-6">
         <div className="shadow-lg rounded-lg bg-white w-full max-w-md p-6">
           <h1 className="text-xl font-semibold mb-5">Login</h1>
-          <form onSubmit={handleSubmit(attemptLogin)}>
+          {error?.response && (
+            <p className="text-white text-center p-2.5 bg-red-400 rounded-md text-sm">
+              {error.response?.data.message}
+            </p>
+          )}
+          <form onSubmit={handleSubmit(attemptLogin)} className="mt-4">
             <div className="mb-3">
               <label htmlFor="email" className="mb-1.5 block">
                 Email

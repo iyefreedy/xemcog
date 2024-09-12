@@ -18,7 +18,7 @@ cors = CORS(
 
 @jwt.user_identity_loader
 def user_identity_lookup(user):
-    return user.user_id
+    return user.id
 
 
 @jwt.user_lookup_loader
@@ -26,4 +26,4 @@ def user_lookup_callback(_jwt_header, jwt_data):
     from src.models import User
 
     identity = jwt_data["sub"]
-    return User.query.filter(User.user_id == identity).one_or_none()
+    return User.query.filter(User.id == identity).one_or_none()

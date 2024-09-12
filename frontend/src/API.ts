@@ -5,6 +5,8 @@ import {
   Experiment,
   Drawing,
   Rating,
+  Input,
+  Sentence,
 } from "@/types";
 import axios from "axios";
 import { getCookie } from "@/utils";
@@ -43,7 +45,7 @@ export default {
     return client.get<Experiment>(`/experiments/${experimentId}`);
   },
   startSession: (data: {
-    word: string;
+    stimuli_id: number;
     experiment_id: number;
     start_time: string;
   }) => {
@@ -67,5 +69,21 @@ export default {
   },
   saveRating: (data: { session_id: number; rate: number }) => {
     return client.post<Rating>("/ratings", data);
+  },
+  saveInputtedWord: (data: {
+    session_id: number;
+    input: string;
+    start_time: string;
+    end_time: string;
+  }) => {
+    return client.post<Input>("/inputs", data);
+  },
+  saveInputtedSentence: (data: {
+    session_id: number;
+    sentence: string;
+    start_time: string;
+    end_time: string;
+  }) => {
+    return client.post<Sentence>("/sentences", data);
   },
 };

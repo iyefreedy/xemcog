@@ -1,52 +1,74 @@
+import { AxiosError } from "axios";
+
 export type Credential = {
   email: string;
   password: string;
 };
 
 export interface User {
-  user_id: number;
+  id: number;
   email: string;
   fullname: string;
   is_admin: boolean;
-  stimuli_word: string;
+  stimulis: Stimuli[];
   created_at: string;
   updated_at: string;
 }
 
+export interface Stimuli {
+  id: number;
+  word: string;
+  round: number;
+  grammatical: string;
+}
+
 export interface Experiment {
-  experiment_id: number;
-  user_id: number;
-  start_time: string;
-  end_time: string;
+  id: number;
   user: User;
   sessions: Session[];
+  start_time: string;
+  end_time: string;
 }
 
 export interface Session {
-  drawing: Drawing;
-  rating: Rating;
-  session_id: number;
-  word: string;
+  id: number;
+  stimuli: Word;
   start_time: string;
   end_time: string;
 }
 
 export interface Rating {
-  rating_id: number;
-  session_id: number;
+  id: number;
   rate: number;
-  created_at: string;
+  start_time: string;
+  end_time: string;
 }
 
 export interface Drawing {
-  drawing_id: number;
-  session_id: number;
+  id: number;
   image_path: string;
-  created_at: string;
+  start_time: string;
+  end_time: string;
+}
+
+export interface Input {
+  id: number;
+  inputted_word: string;
+  start_time: string;
+  end_time: string;
+}
+
+export interface Sentence {
+  id: number;
+  inputted_sentence: string;
+  start_time: string;
+  end_time: string;
 }
 
 export type AuthContextProps = {
   user: User | null;
+  error: AxiosError | undefined;
+  loading: boolean;
   handleLogin: (data: Credential) => Promise<void>;
   handleLogout: () => Promise<void>;
 };

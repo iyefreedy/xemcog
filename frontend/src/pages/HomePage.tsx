@@ -7,19 +7,21 @@ export default function HomePage() {
   return (
     <div className="container mx-auto p-4">
       <header className="my-8 text-center">
-        <h1 className="text-4xl font-bold">Cognitive Linguistics Research</h1>
+        <h1 className="text-4xl font-bold">Eksperimen Semantik Kognitif UAI</h1>
         <p className="mt-4 text-lg">
-          Welcome to our research experiment platform. Your participation helps
-          us understand how Indonesian grammar influences semantic
-          interpretation.
+          Hai Partisipan, selamat datang di Eksperimen Semantik Kognitif.
+          Partisipasi Anda adalah kontribusi terhadap ilmu pengetahuan kognisi
+          dan bahasa.
         </p>
+        <p>Untuk itu, kami sangat berterima kasih.</p>
+        <p> Klik "lanjut" untuk memulai eksperimen.</p>
       </header>
       <div className="mt-8 space-x-4 text-center">
         <Link
           to="/experiment"
           className="rounded-full bg-emerald-500 px-6 py-3 text-white"
         >
-          Get Started
+          Lanjut
         </Link>
         {user?.is_admin && (
           <Link

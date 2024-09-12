@@ -4,7 +4,7 @@ from datetime import datetime
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, current_user
 from werkzeug.utils import secure_filename
-from src.models import User, Session, Drawing, Rating, Experiment
+from src.models import User, Session, Drawing, Rating, Experiment, Input, Sentence
 from src.schema import login_schema, CustomValidator
 from src.extensions import db
 
@@ -85,7 +85,7 @@ def end_experiment(experiment_id):
     data: dict = request.get_json()
     try:
         experiment: Experiment = Experiment.query.filter_by(
-            experiment_id=experiment_id).first()
+            id=experiment_id).first()
         experiment.end_time = datetime.fromisoformat(
             data.get('end_time').replace('Z', '+00:00'))
         db.session.commit()
@@ -103,7 +103,7 @@ def create_session():
     try:
         new_session = Session(
             experiment_id=data.get('experiment_id'),
-            word=data.get('word'),
+            stimuli_id=data.get('stimuli_id'),
             start_time=datetime.fromisoformat(
                 data.get('start_time').replace('Z', '+00:00'))
         )
@@ -176,6 +176,52 @@ def create_rating():
         db.session.add(new_rating)
         db.session.commit()
         return jsonify(message="Resource created", data=new_rating.serialize()), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify(message=str(e)), 500
+    finally:
+        db.session.close()
+
+
+@api_blueprint.post('/sentences')
+@jwt_required()
+def create_sentence():
+    try:
+        data: dict = request.get_json()
+        new_sentence = Sentence(
+            session_id=data.get('session_id'),
+            inputted_sentence=data.get('sentence'),
+            start_time=datetime.fromisoformat(
+                data.get('start_time').replace('Z', '+00:00')),
+            end_time=datetime.fromisoformat(
+                data.get('end_time').replace('Z', '+00:00'))
+        )
+        db.session.add(new_sentence)
+        db.session.commit()
+        return jsonify(message="Resource created", data=new_sentence.serialize()), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify(message=str(e)), 500
+    finally:
+        db.session.close()
+
+
+@api_blueprint.post('/inputs')
+@jwt_required()
+def create_input():
+    try:
+        data: dict = request.get_json()
+        new_input = Input(
+            session_id=data.get('session_id'),
+            inputted_word=data.get('input'),
+            start_time=datetime.fromisoformat(
+                data.get('start_time').replace('Z', '+00:00')),
+            end_time=datetime.fromisoformat(
+                data.get('end_time').replace('Z', '+00:00'))
+        )
+        db.session.add(new_input)
+        db.session.commit()
+        return jsonify(message="Resource created", data=new_input.serialize()), 201
     except Exception as e:
         db.session.rollback()
         return jsonify(message=str(e)), 500
