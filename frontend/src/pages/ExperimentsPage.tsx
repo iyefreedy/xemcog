@@ -23,14 +23,14 @@ export default function ExperimentsPage() {
               </thead>
               <tbody className="divide-y">
                 {experiments.map((experiment, i) => (
-                  <tr key={experiment.experiment_id}>
+                  <tr key={experiment.id}>
                     <td className="text-center py-2">{i + 1}</td>
                     <td>{experiment.user.fullname}</td>
                     <td>{experiment.start_time}</td>
                     <td>{experiment.end_time}</td>
                     <td>
                       <Link
-                        to={`/experiments/${experiment.experiment_id}`}
+                        to={`/experiments/${experiment.id}`}
                         className="text-xs bg-green-400 px-1.5 py-1 rounded-md"
                       >
                         See details
