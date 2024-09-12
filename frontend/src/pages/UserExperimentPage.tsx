@@ -43,7 +43,7 @@ const PrimeStep = () => {
 };
 
 const StimulusStep = () => {
-  const [secondsLeft, setSecondsLeft] = useState(3); // Mulai dari 3 detik
+  const [_, setSecondsLeft] = useState(3); // Mulai dari 3 detik
 
   const { user } = useContext(AuthContext);
   const { setStep, repetition, startSession } = useContext(ExperimentContext);

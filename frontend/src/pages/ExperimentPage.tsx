@@ -30,23 +30,16 @@ export default function ExperimentPage() {
               </thead>
               <tbody className="divide-y">
                 {experiment?.sessions.map((session, i) => (
-                  <tr key={session.session_id}>
+                  <tr key={session.id}>
                     <td className="text-center py-2">{i + 1}</td>
-                    <td>{session.word}</td>
                     <td>{session.start_time}</td>
                     <td>{session.end_time}</td>
-                    <td>{session.rating?.rate}</td>
                     <td>
-                      <a
-                        href={`http://localhost:5000/static/images/drawings/${session.drawing.image_path}`}
-                        target="_blank"
-                      >
-                        Image
-                      </a>
+                      <a target="_blank">Image</a>
                     </td>
                     <td>
                       <Link
-                        to={`/experiments/${session.session_id}`}
+                        to={`/experiments/${session.id}`}
                         className="text-xs bg-green-400 px-1.5 py-1 rounded-md"
                       >
                         See details

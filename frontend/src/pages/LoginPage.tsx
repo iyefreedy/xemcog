@@ -34,7 +34,7 @@ export default function LoginPage() {
           <h1 className="text-xl font-semibold mb-5">Login</h1>
           {error?.response && (
             <p className="text-white text-center p-2.5 bg-red-400 rounded-md text-sm">
-              {error.response?.data.message}
+              {(error.response?.data as any).message}
             </p>
           )}
           <form onSubmit={handleSubmit(attemptLogin)} className="mt-4">
