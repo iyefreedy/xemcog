@@ -16,8 +16,8 @@ type ExperimentStep =
   | "input"
   | "sketch"
   | "rate"
-  | "first-prime"
-  | "second-prime"
+  | "prime-1"
+  | "prime-2"
   | "stimulus"
   | "sentence"
   | "finish"
@@ -68,7 +68,7 @@ export const ExperimentProvider = ({
   const [repetition, setRepetition] = useState(0);
   const [input, setInput] = useState("");
   const [sentence, setSentence] = useState("");
-  const [step, setStep] = useState<ExperimentStep>("first-prime");
+  const [step, setStep] = useState<ExperimentStep>("prime-1");
   const [rate, setRate] = useState(0);
   const [lines, setLines] = useState<number[][]>([]);
   const [loading, setLoading] = useState(false);
@@ -105,7 +105,7 @@ export const ExperimentProvider = ({
         start_time: startTime,
         end_time: new Date().toISOString(),
       });
-      nextStep();
+      setStep("rate");
     } catch (error) {
       console.error(error);
     } finally {
@@ -145,7 +145,7 @@ export const ExperimentProvider = ({
         session_id: session!.id,
       });
 
-      nextStep();
+      setStep("sketch");
     } catch (error) {
       console.error(error);
     }
@@ -162,7 +162,7 @@ export const ExperimentProvider = ({
         end_time: new Date().toISOString(),
       });
 
-      nextStep();
+      setStep("finish");
     } catch (error) {
       console.error(error);
     }
@@ -189,15 +189,17 @@ export const ExperimentProvider = ({
     setInput("");
     setSentence("");
     setRate(0);
-    setStep("first-prime");
+    setStep("prime-1");
   };
 
   const nextStep = () => {
     setStep((prevStep) => {
       switch (prevStep) {
-        case "first-prime":
+        case "prime-1":
           return "stimulus";
         case "stimulus":
+          return "prime-2";
+        case "prime-2":
           return "input";
         case "input":
           return "rate";

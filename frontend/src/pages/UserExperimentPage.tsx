@@ -10,7 +10,7 @@ export default function UserExperimentPage() {
 
   return (
     <div>
-      {step === "prime" && <PrimeStep />}
+      {(step === "prime-1" || step === "prime-2") && <PrimeStep />}
       {step === "stimulus" && <StimulusStep />}
       {step === "input" && <InputStep />}
       {step === "sentence" && <SentenceStep />}
@@ -26,7 +26,7 @@ const PrimeStep = () => {
 
   useEffect(() => {
     const redirectTimeout = setTimeout(() => {
-      setStep("stimulus");
+      setStep((prevStep) => (prevStep === "prime-1" ? "stimulus" : "input"));
     }, 5000); // Pengalihan setelah 3 detik
 
     // Bersihkan interval dan timeout ketika komponen dibongkar
@@ -56,7 +56,7 @@ const StimulusStep = () => {
     }, 1000); // Kurangi setiap detik
 
     const redirectTimeout = setTimeout(() => {
-      setStep("input");
+      setStep((prevStep) => (prevStep === "stimulus" ? "prime-2" : "prime-1"));
     }, 3000); // Pengalihan setelah 3 detik
 
     // Bersihkan interval dan timeout ketika komponen dibongkar
@@ -92,7 +92,13 @@ const InputStep = () => {
       <div className="text-center max-w-md mx-auto">
         <form onSubmit={handleSubmitWord}>
           <div className="mb-3">
-            <label htmlFor="word">Masukkan Kata Stimuli</label>
+            <label htmlFor="word">
+              Tulis ulang kata yang tadi anda perhatikan.
+            </label>
+            <p>
+              Durasi respon anda akan kami hitung. Waktu respon akan dihitung
+              ketika Anda mulai menulis. Pastikan ejaan benar.
+            </p>
             <input
               type="text"
               className="w-full px-2.5 mt-1.5 py-1.5 rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-shadow text-center"
@@ -133,7 +139,7 @@ const SentenceStep = () => {
       <form onSubmit={handleSubmitSentence}>
         <div className="mb-3">
           <label htmlFor="sentence" className="block">
-            Buat kalimat dari kata tersebut!
+            Buat satu kalimat dari kata tersebut.
           </label>
           <textarea
             id="sentence"
@@ -188,8 +194,17 @@ const SketchStep = () => {
   }
 
   return (
-    <form className="px-4 pt-10" onSubmit={handleSubmitSketch}>
-      <button type="submit">Submit</button>
+    <form className="px-4 pt-4 text-center" onSubmit={handleSubmitSketch}>
+      <p>Gambarkan pemahaman Anda terhadap kata tersebut.</p>
+      <p className="mb-3">
+        Waktu menggambar akan dihitung dari pertama anda mengklik.
+      </p>
+      <button
+        type="submit"
+        className="inline-block py-1.5 px-3 bg-green-400 text-white mb-3 rounded-md mr-0 ml-auto"
+      >
+        Submit
+      </button>
       <Stage
         ref={stageRef}
         onPointerDown={handleMouseDown}
@@ -224,8 +239,9 @@ const RateStep = () => {
         <form onSubmit={handleSubmitRate}>
           <div className="mb-3">
             <label htmlFor="word" className="mb-3 block">
-              Seberapa familiar anda dengan kata tersebut?
+              Beri skor terhadap pernyataan dibawah ini
             </label>
+            <p>Saya pikir kata tersebut lazim</p>
             <div className="w-full flex justify-center space-x-6">
               <div className="flex items-center space-x-2">
                 <input
@@ -235,7 +251,7 @@ const RateStep = () => {
                   value={1}
                   onChange={(e) => setRate(parseInt(e.target.value))}
                 />
-                <label htmlFor="notFamiliarRate">Tidak Familiar</label>
+                <label htmlFor="notFamiliarRate">Sangat tidak setuju</label>
               </div>
               <div className="flex items-center space-x-2">
                 <input
@@ -245,7 +261,7 @@ const RateStep = () => {
                   value={2}
                   onChange={(e) => setRate(parseInt(e.target.value))}
                 />
-                <label htmlFor="lessFamiliarRate">Kurang Familiar</label>
+                <label htmlFor="lessFamiliarRate">Tidak setuju</label>
               </div>
               <div className="flex items-center space-x-2">
                 <input
@@ -255,7 +271,7 @@ const RateStep = () => {
                   value={3}
                   onChange={(e) => setRate(parseInt(e.target.value))}
                 />
-                <label htmlFor="seemsFamiliarRate">Cukup Familiar</label>
+                <label htmlFor="seemsFamiliarRate">Netral</label>
               </div>
 
               <div className="flex items-center space-x-2">
@@ -266,7 +282,7 @@ const RateStep = () => {
                   value={4}
                   onChange={(e) => setRate(parseInt(e.target.value))}
                 />
-                <label htmlFor="familiarRate">Familiar</label>
+                <label htmlFor="familiarRate">Setuju</label>
               </div>
               <div className="flex items-center space-x-2">
                 <input
@@ -276,7 +292,7 @@ const RateStep = () => {
                   value={5}
                   onChange={(e) => setRate(parseInt(e.target.value))}
                 />
-                <label htmlFor="veryFamiliarRate">Sangat Familiar</label>
+                <label htmlFor="veryFamiliarRate">Sangat setuju</label>
               </div>
             </div>
           </div>
@@ -304,21 +320,26 @@ const FinishStep = () => {
           Anda telah menyelesaikan semua eksperimen. Terima kasih atas
           partisipasi anda.
         </p>
-        <p>Klik "selesai".</p>
-        <button onClick={endExperiment}>Selesai</button>
+        <p className="mb-3">Klik "selesai".</p>
+        <button
+          onClick={endExperiment}
+          className="inline-block px-3 bg-green-400 text-white py-1.5 rounded-md"
+        >
+          Selesai
+        </button>
       </div>
     );
   }
 
   return (
     <div className="mt-10 text-center">
-      <p>
+      <p className="mb-3">
         Anda telah menyelesaikan satu putaran eksperimen. Klik "lanjut" untuk
         menyelesaikan putaran berikutnya
       </p>
       <button
         onClick={nextSession}
-        className="block w-full bg-green-400 text-white py-1.5 rounded-md"
+        className="inline-block px-3 bg-green-400 text-white py-1.5 rounded-md"
       >
         Lanjut
       </button>

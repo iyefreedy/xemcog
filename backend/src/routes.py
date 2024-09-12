@@ -123,7 +123,7 @@ def end_session(session_id):
     data: dict = request.get_json()
     try:
         session: Session = Session.query.filter_by(
-            session_id=session_id).first()
+            id=session_id).first()
         session.end_time = datetime.fromisoformat(
             data.get('end_time').replace('Z', '+00:00'))
         db.session.commit()
