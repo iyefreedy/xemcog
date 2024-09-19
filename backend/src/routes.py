@@ -1,7 +1,7 @@
 import os
 import sys
 from datetime import datetime
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, send_from_directory
 from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, current_user
 from werkzeug.utils import secure_filename
 from src.models import User, Session, Drawing, Rating, Experiment, Input, Sentence
@@ -55,7 +55,7 @@ def get_experiments():
 @jwt_required()
 def get_experiment(experiment_id):
     experiment = Experiment.query.filter_by(
-        experiment_id=experiment_id).first()
+        id=experiment_id).first()
     return experiment.serialize()
 
 
@@ -117,6 +117,23 @@ def create_session():
         return jsonify({"message": "Failed to start session"}), 500
 
 
+@api_blueprint.get('/sessions/<session_id>')
+@jwt_required()
+def get_session_by_id(session_id):
+
+    try:
+        session = Session.query.filter_by(id=session_id).first()
+
+        if session is None:
+            return jsonify(message="Resource not found"), 404
+
+        return session.serialize(), 201
+    except Exception as e:
+        db.session.rollback()
+        print(e)
+        return jsonify({"message": "Failed to start session"}), 500
+
+
 @api_blueprint.put('/sessions/<session_id>')
 @jwt_required()
 def end_session(session_id):
@@ -154,6 +171,10 @@ def create_drawing():
             new_drawing = Drawing(
                 session_id=data.get('session_id'),
                 image_path=filename,
+                start_time=datetime.fromisoformat(
+                    data.get('start_time').replace('Z', '+00:00')),
+                end_time=datetime.fromisoformat(
+                    data.get('end_time').replace('Z', '+00:00'))
             )
             db.session.add(new_drawing)
             db.session.commit()

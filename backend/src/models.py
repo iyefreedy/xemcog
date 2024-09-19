@@ -102,6 +102,8 @@ class Session(db.Model):
     rating = db.relationship(
         "Rating", backref="session", lazy=True, uselist=False)
     input = db.relationship("Input", backref="session", uselist=False)
+    sentence = db.relationship("Sentence", backref="session", uselist=False)
+    stimuli = db.relationship("Stimuli", lazy=True)
 
     def serialize(self):
         return {
@@ -110,7 +112,10 @@ class Session(db.Model):
             "start_time": self.start_time,
             "end_time": self.end_time,
             "drawing": self.drawing.serialize() if self.drawing else None,
-            "rating": self.rating.serialize() if self.rating else None
+            "rating": self.rating.serialize() if self.rating else None,
+            "stimuli": self.stimuli.serialize() if self.stimuli else None,
+            "input": self.input.serialize() if self.input else None,
+            "sentence": self.sentence.serialize() if self.sentence else None
         }
 
     def __repr__(self):

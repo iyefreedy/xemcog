@@ -9,6 +9,7 @@ import DashboardPage from "@/pages/DashboardPage";
 import UsersPage from "@/pages/UsersPage";
 import ExperimentsPage from "@/pages/ExperimentsPage";
 import ExperimentPage from "@/pages/ExperimentPage";
+import SessionDetailPage from "./pages/SessionDetailPage";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             path="/experiments/:experimentId"
             element={<ExperimentPage />}
           />
+          <Route path="/sessions/:sessionId" element={<SessionDetailPage />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

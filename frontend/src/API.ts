@@ -44,6 +44,9 @@ export default {
   getExperiment: (experimentId: string) => {
     return client.get<Experiment>(`/experiments/${experimentId}`);
   },
+  getSessionById: (sessionId: string) => {
+    return client.get<Session>(`/sessions/${sessionId}`);
+  },
   startSession: (data: {
     stimuli_id: number;
     experiment_id: number;

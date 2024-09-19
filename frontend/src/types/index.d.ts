@@ -32,9 +32,13 @@ export interface Experiment {
 
 export interface Session {
   id: number;
-  stimuli: Word;
+  stimuli: Stimuli;
   start_time: string;
   end_time: string;
+  rating: Rating;
+  drawing: Drawing;
+  input: Input;
+  sentence: Sentence;
 }
 
 export interface Rating {

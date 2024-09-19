@@ -127,6 +127,8 @@ export const ExperimentProvider = ({
       const formData = new FormData();
       formData.append("session_id", session.id.toString());
       formData.append("image", blob, Math.random() + ".jpg");
+      formData.append("start_time", startTime);
+      formData.append("end_time", new Date().toISOString());
 
       await API.saveDrawing(formData);
 
@@ -217,6 +219,10 @@ export const ExperimentProvider = ({
 
   const endExperiment = async () => {
     try {
+      await API.endSession({
+        session_id: session!.id,
+        end_time: new Date().toISOString(),
+      });
       await API.endExperiment({
         experiment_id: experiment!.id,
         end_time: new Date().toISOString(),

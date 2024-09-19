@@ -23,8 +23,6 @@ export default function ExperimentPage() {
                   <th className="text-left">Stimuli Word</th>
                   <th className="text-left">Start time</th>
                   <th className="text-left">End time</th>
-                  <th>Familiarity Rate</th>
-                  <th>Image</th>
                   <th></th>
                 </tr>
               </thead>
@@ -32,14 +30,12 @@ export default function ExperimentPage() {
                 {experiment?.sessions.map((session, i) => (
                   <tr key={session.id}>
                     <td className="text-center py-2">{i + 1}</td>
+                    <td>{session.stimuli.word}</td>
                     <td>{session.start_time}</td>
                     <td>{session.end_time}</td>
                     <td>
-                      <a target="_blank">Image</a>
-                    </td>
-                    <td>
                       <Link
-                        to={`/experiments/${session.id}`}
+                        to={`/sessions/${session.id}`}
                         className="text-xs bg-green-400 px-1.5 py-1 rounded-md"
                       >
                         See details

@@ -1,14 +1,23 @@
-import os
+
 import sys
 from flask import Flask, send_from_directory
 from dotenv import load_dotenv
 from src.extensions import db, migrate, jwt, cors
-from src.routes import api_blueprint
+from src.routes import UPLOAD_FOLDER, api_blueprint
 
 load_dotenv()
 
 app = Flask(__name__)
 app.config.from_object("src.config.Config")
+
+
+@app.route("/images/<path:name>")
+def download_file(name):
+    print(name, file=sys.stderr)
+    return send_from_directory(
+        UPLOAD_FOLDER, name
+    )
+
 
 with app.app_context():
     app.json.sort_keys = False
