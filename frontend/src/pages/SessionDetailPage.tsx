@@ -1,7 +1,6 @@
 import { useSessionDetailFetch } from "@/hooks/useSessionDetailFetch";
 import AdminLayout from "@/layouts/AdminLayout";
 import { useParams } from "react-router-dom";
-import { PaperClipIcon } from "@heroicons/react/20/solid";
 
 export default function SessionDetailPage() {
   const { sessionId } = useParams();
