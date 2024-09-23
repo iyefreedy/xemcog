@@ -218,6 +218,7 @@ export const ExperimentProvider = ({
   };
 
   const endExperiment = async () => {
+    const { handleLogout } = useContext(AuthContext);
     try {
       await API.endSession({
         session_id: session!.id,
@@ -227,6 +228,8 @@ export const ExperimentProvider = ({
         experiment_id: experiment!.id,
         end_time: new Date().toISOString(),
       });
+
+      await handleLogout();
       setStep("thankyou");
     } catch (error) {
       console.log(error);

@@ -50,7 +50,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const handleLogout = async () => {};
+  const handleLogout = async () => {
+    try {
+      setLoading(true);
+      await API.logout();
+
+      setUser(null);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        setError(error);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <AuthContext.Provider

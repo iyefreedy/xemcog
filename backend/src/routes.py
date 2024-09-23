@@ -2,7 +2,7 @@ import os
 import sys
 from datetime import datetime
 from flask import Blueprint, request, jsonify, send_from_directory
-from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, current_user
+from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, current_user, unset_access_cookies
 from werkzeug.utils import secure_filename
 from src.models import User, Session, Drawing, Rating, Experiment, Input, Sentence
 from src.schema import login_schema, CustomValidator
@@ -42,6 +42,15 @@ def attempt_login():
 @jwt_required()
 def authenticate():
     return current_user.serialize(), 200
+
+
+@api_blueprint.delete('/logout')
+@jwt_required()
+def logout():
+    response = jsonify(message="Sucess logout")
+    unset_access_cookies(response)
+
+    return response, 200
 
 
 @api_blueprint.get('/experiments')

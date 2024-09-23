@@ -30,6 +30,9 @@ export default {
   authenticate: () => {
     return client.get<User>("/authenticate");
   },
+  logout: () => {
+    return client.delete("/logout");
+  },
   startExperiment: (data: { user_id: number; start_time: string }) => {
     return client.post<Experiment>("/experiments", data);
   },
