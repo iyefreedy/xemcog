@@ -58,7 +58,7 @@ export const ExperimentProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { user } = useContext(AuthContext);
+  const { user, handleLogout } = useContext(AuthContext);
 
   const [experiment, setExperiment] = useState<Experiment>();
   const [session, setSession] = useState<Session>();
@@ -218,7 +218,6 @@ export const ExperimentProvider = ({
   };
 
   const endExperiment = async () => {
-    const { handleLogout } = useContext(AuthContext);
     try {
       await API.endSession({
         session_id: session!.id,
