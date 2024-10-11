@@ -1,5 +1,4 @@
 import os
-import sys
 from datetime import datetime
 from flask import Blueprint, request, jsonify, send_from_directory
 from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, current_user, unset_access_cookies
@@ -9,9 +8,6 @@ from src.schema import login_schema, CustomValidator
 from src.extensions import db
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-UPLOAD_FOLDER = os.path.join(os.path.dirname(
-    os.path.realpath(__file__)), '../static/images/drawings')
-
 api_blueprint = Blueprint('api', __name__, url_prefix='/api')
 
 
@@ -42,6 +38,23 @@ def attempt_login():
 @jwt_required()
 def authenticate():
     return current_user.serialize(), 200
+
+
+@api_blueprint.get('/users')
+@jwt_required()
+def all_users():
+    users = User.query.all()
+    return jsonify([user.serialize() for user in users])
+
+
+@api_blueprint.get('/users/<user_id>')
+@jwt_required()
+def get_user(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    if user is None:
+        return jsonify(message='User not found'), 404
+
+    return jsonify(user.serialize())
 
 
 @api_blueprint.delete('/logout')
@@ -163,6 +176,7 @@ def end_session(session_id):
 @api_blueprint.post("/drawings")
 @jwt_required()
 def create_drawing():
+    from src import app
     try:
         if 'image' not in request.files:
             return jsonify(message="Image not found"), 400
@@ -174,8 +188,7 @@ def create_drawing():
         data = request.form
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            print(os.path.join(UPLOAD_FOLDER, filename), file=sys.stderr)
-            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
             new_drawing = Drawing(
                 session_id=data.get('session_id'),

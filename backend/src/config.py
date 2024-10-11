@@ -3,7 +3,9 @@ from src.extensions import private_key, public_key
 from sqlalchemy import URL
 
 UPLOAD_PATH = os.path.join(os.path.dirname(
-    os.path.realpath(__file__)), '/static/images/responses')
+    os.path.realpath(__file__)), '/static/images/drawings')
+
+print(UPLOAD_PATH)
 
 
 DATABASE_URI = URL.create(

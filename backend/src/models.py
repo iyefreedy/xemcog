@@ -28,7 +28,8 @@ class User(db.Model):
             "fullname": self.fullname,
             "email": self.email,
             "is_admin": self.is_admin,
-            "stimulis": [stimuli.serialize() for stimuli in self.stimulis]
+            "stimulis": [stimuli.serialize() for stimuli in self.stimulis],
+            "experiments": [experiment.serialize() for experiment in self.experiments]
         }
 
     def __repr__(self):
@@ -79,7 +80,6 @@ class Experiment(db.Model):
             "user_id": self.user_id,
             "start_time": self.start_time,
             "end_time": self.end_time,
-            "user": self.user.serialize(),
             "sessions": [session.serialize() for session in self.sessions]
         }
 
@@ -97,10 +97,8 @@ class Session(db.Model):
                            default=datetime.now())
     end_time = db.Column(db.DateTime(), nullable=True)
 
-    drawing = db.relationship(
-        "Drawing", backref="session", lazy=True, uselist=False)
-    rating = db.relationship(
-        "Rating", backref="session", lazy=True, uselist=False)
+    drawing = db.relationship("Drawing", backref="session", uselist=False)
+    rating = db.relationship("Rating", backref="session", uselist=False)
     input = db.relationship("Input", backref="session", uselist=False)
     sentence = db.relationship("Sentence", backref="session", uselist=False)
     stimuli = db.relationship("Stimuli", lazy=True)
