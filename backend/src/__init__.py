@@ -26,5 +26,5 @@ with app.app_context():
 
     app.register_blueprint(api_blueprint)
     print(app.static_folder, file=sys.stderr)
-
+    print(app.url_map)
     print(app.static_url_path, file=sys.stderr)

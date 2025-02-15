@@ -8,7 +8,7 @@ from src.schema import login_schema, CustomValidator
 from src.extensions import db
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-api_blueprint = Blueprint('api', __name__, url_prefix='/api')
+api_blueprint = Blueprint('api', __name__)
 
 
 @api_blueprint.post('/login')
