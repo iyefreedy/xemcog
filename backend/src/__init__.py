@@ -25,6 +25,5 @@ with app.app_context():
     cors.init_app(app)
 
     app.register_blueprint(api_blueprint)
-    print(app.url_map)
     print(app.static_folder, file=sys.stderr)
     print(app.static_url_path, file=sys.stderr)
